@@ -1,4 +1,4 @@
-import mongoose, { model,Schema } from "mongoose";
+import { model,Schema } from "mongoose";
 
 const userSchema = new Schema({
     userName: {
@@ -25,8 +25,8 @@ const userSchema = new Schema({
     phone:{
         type:String,
         selected:false,
-        minLength:[11,"Phone number must conatin exact 11 digits."],
-        maxLength:[11,"Phone number must conatin exact 11 digits."]
+        minLength:[10,"Phone number must conatin exact 10 digits."],
+        maxLength:[10,"Phone number must conatin exact 10 digits."]
     },
     profileImage:{
         public_id:{
@@ -40,12 +40,12 @@ const userSchema = new Schema({
     },
     paymentMethod:{
         bankTransfer:{
-        bankAccountNumber:String,
-        bankAccountName:String,
-        bankName: String
+            bankAccountNumber:String,
+            bankAccountName:String,
+            bankName: String
         },
-        easyPaisa:{
-            easyPaisaAccountNumber:Number
+        upi:{
+            upiId:String
         },
         paypal:{
             paypalEmail: String
