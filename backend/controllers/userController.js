@@ -1,9 +1,10 @@
+import AsyncHandler from "../middleware/AsyncHandler.js";
 import ErrorHandler from "../middleware/error.js"
 import { User } from "../model/userSchema.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { generateToken } from "../utils/jwtToken.js";
 
-export const register = async(req,res,next)=>{
+export const register = AsyncHandler(async(req,res,next)=>{
     if(!req.files ||Object.keys(req.files).length === 0){
         return next(new ErrorHandler("Profile image required !!!", 400))
     }
@@ -70,4 +71,4 @@ export const register = async(req,res,next)=>{
     })
 
     generateToken(user, "User registered successfully", 200, res)
-}
+});
