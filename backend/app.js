@@ -4,6 +4,7 @@ import express from "express"
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
+import { ErrorMiddleware } from "./middleware/error.js";
 const app = express()
 
 // cors is used for connecting fronted with backend
@@ -21,6 +22,6 @@ app.use(
         tempFileDir:"/tmp"
     })
 )
-
+app.use(ErrorMiddleware)
 
 export default app
