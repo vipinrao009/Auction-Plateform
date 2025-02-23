@@ -1,4 +1,6 @@
 import { model,Schema } from "mongoose";
+import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
 
 const userSchema = new Schema({
     userName: {
@@ -12,7 +14,6 @@ const userSchema = new Schema({
     },
     password:{
         type:String,
-        unique:true,
         required:true,
         minLength:[8,"Username must conatain atleast 8 characters."],
     },
@@ -72,5 +73,24 @@ const userSchema = new Schema({
         default:Date.now
     }
 })
+
+userSchema.pre("save",async function(){
+    if(!this.isModified("password")){
+        next();
+    }
+    this.password = await bcrypt.hash(this.password,10)
+})
+
+userSchema.methods.comparePassword = async function (enteredPassword) {
+    return bcrypt.compare(enteredPassword, this.password);  // No need for 'await' return
+};
+
+userSchema.methods.generateJsonWebToken = function () {
+    return jwt.sign(
+        { _id: this._id },
+        process.env.JWT_SECRET_KEY,
+        { expiresIn: process.env.JWT_EXPIRE }
+    );
+};
 
 export const User = model("User",userSchema);

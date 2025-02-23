@@ -1,6 +1,7 @@
 import ErrorHandler from "../middleware/error.js"
 import { User } from "../model/userSchema.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { generateToken } from "../utils/jwtToken.js";
 
 export const register = async(req,res,next)=>{
     if(!req.files ||Object.keys(req.files).length === 0){
@@ -68,9 +69,5 @@ export const register = async(req,res,next)=>{
         }
     })
 
-    res.status(200).json({
-        success:true,
-        message:"User registered successfully",
-        user
-    })
+    generateToken(user, "User registered successfully", 200, res)
 }
