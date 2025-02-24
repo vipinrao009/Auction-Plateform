@@ -8,5 +8,5 @@ router.post('/register',register)
 router.post('/login',login)
 router.get('/me',isAuthenticated,getProfile)
 router.get('/leaderboard',fetchLeaderboard)
-router.get('/logout',logout)
+router.get('/logout',isAuthenticated,logout)
 export default router
