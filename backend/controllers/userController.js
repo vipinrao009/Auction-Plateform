@@ -103,7 +103,16 @@ export const logout = AsyncHandler(async(req,res,next)=>{
 })
 
 export const getProfile = AsyncHandler(async(req,res,next)=>{
+    const user = req.user
+    if(!user){
+        return next(new ErrorHandler("Failed to get the profile",400))
+    }
 
+    res.status(200).json({
+        success:true,
+        message:"Profile fetched successfully!!",
+        user
+    })
 })
 
 export const fetchLeaderboard = AsyncHandler(async(req,res,next)=>{
