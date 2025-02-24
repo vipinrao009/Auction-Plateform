@@ -70,5 +70,42 @@ export const register = AsyncHandler(async(req,res,next)=>{
         }
     })
 
+    user.password = undefined;
+
     generateToken(user, "User registered successfully", 200, res)
 });
+
+export const login = AsyncHandler(async(req,res,next)=>{
+    const {email,password} = req.body;
+
+    if(!email || !password){
+        return next(new ErrorHandler("fill the all details",400))
+    }
+    
+    const user = await User.findOne({ email }).select("+password"); // ✅ Yeh ek Mongoose object hoga
+    if (!user) {
+        return next(new ErrorHandler("Invalid credentials", 401));
+    }
+    
+    const isPasswordMatched = await user.comparePassword(password);
+    
+    if(!isPasswordMatched){
+        return next(new ErrorHandler("Invalid Password",400))
+    }  
+    
+    user.password = undefined; // Prevent to send the password in response 
+
+    generateToken(user, "User login successfully", 200, res)
+})
+
+export const logout = AsyncHandler(async(req,res,next)=>{
+
+})
+
+export const getProfile = AsyncHandler(async(req,res,next)=>{
+
+})
+
+export const fetchLeaderboard = AsyncHandler(async(req,res,next)=>{
+
+})

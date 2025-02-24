@@ -14,6 +14,7 @@ const userSchema = new Schema({
     },
     password:{
         type:String,
+        select:false,
         required:true,
         minLength:[8,"Username must conatain atleast 8 characters."],
     },
@@ -25,7 +26,6 @@ const userSchema = new Schema({
     },
     phone:{
         type:String,
-        selected:false,
         minLength:[10,"Phone number must conatin exact 10 digits."],
         maxLength:[10,"Phone number must conatin exact 10 digits."]
     },
