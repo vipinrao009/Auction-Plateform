@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
 import { ErrorMiddleware } from "./middleware/error.js";
 import userRouter from "./router/userRouter.js"
+import auctionRouter from "./router/auctionRouter.js"
 const app = express()
 
 // cors is used for connecting fronted with backend
@@ -24,6 +25,7 @@ app.use(
     })
 )
 app.use("/api/v1/user/",userRouter)
+app.use("/api/v1/auction/",auctionRouter)
 app.use(ErrorMiddleware)
 
 export default app
