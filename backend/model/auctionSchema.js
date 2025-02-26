@@ -13,9 +13,8 @@ const auctionSchema = new Schema({
 
     currentBid:{ type : Number, default:0},
 
-    startingTime:String,
-
-    endingTime:String,
+    startingTime: { type: Date, required: true },
+    endingTime: { type: Date, required: true },
 
     image:{
         public_id:{
