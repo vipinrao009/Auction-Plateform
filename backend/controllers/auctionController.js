@@ -6,9 +6,9 @@ import { Auction } from "../model/auctionSchema.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { User } from "../model/userSchema.js";
 
-export const addItem = AsyncHandler(async(req,res,next)=>{
-    if(!req.files ||Object.keys(req.files).length === 0){
-        return next(new ErrorHandler("Auction image required !!!", 400))
+export const addItem = AsyncHandler(async (req, res, next) => {
+    if (!req.files || Object.keys(req.files).length === 0) {
+        return next(new ErrorHandler("Auction image required !!!", 400));
     }
 
     const { image } = req.files;
@@ -23,36 +23,49 @@ export const addItem = AsyncHandler(async(req,res,next)=>{
         category,
         condition,
         startingBid,
-        currentBid,
-        startingTime,
-        endingTime,
-    } = req.body
+        currentBid
+    } = req.body;
 
-    if(!title || !description || !category || !condition || !startingBid || !currentBid || !startingTime || !endingTime){
-        return next(new ErrorHandler("All Fields are required!!"))
+    // ✅ Convert strings to Date objects
+    const startingTime = new Date(req.body.startingTime);
+    const endingTime = new Date(req.body.endingTime);
+
+    // ✅ Check for missing fields
+    if (!title || !description || !category || !condition || !startingBid || !currentBid || !startingTime || !endingTime) {
+        return next(new ErrorHandler("All Fields are required!!"));
     }
-    if(new Date(startingTime) < new Date(endingTime)){
-       return next(new ErrorHandler("Auction starting time must be greater than present time"))
+
+    // ✅ Check if the dates are valid
+    if (isNaN(startingTime.getTime()) || isNaN(endingTime.getTime())) {
+        return next(new ErrorHandler("Invalid date format. Use 'YYYY-MM-DDTHH:mm:ss.sssZ'", 400));
     }
-    if(new Date(startingTime) >= new Date(endingTime)){
-        return next(new ErrorHandler("Auction starting time must be less than ending time"))
+
+    // ✅ Ensure auction start time is in the future
+    if (startingTime <= new Date()) {
+        return next(new ErrorHandler("Auction starting time must be greater than present time", 400));
     }
-   
+
+    // ✅ Ensure start time is before end time
+    if (startingTime >= endingTime) {
+        return next(new ErrorHandler("Auction starting time must be less than ending time", 400));
+    }
+
+    // ✅ Check if there is an active auction
     const alreadyOneAuctionActive = await Auction.find({
         createdBy: req.user._id,
-        endingTime: { $gt: Date.now() },
-      });
-      if (alreadyOneAuctionActive.length > 0) {
+        endingTime: { $gt: new Date() }, // ✅ Corrected comparison
+    });
+
+    if (alreadyOneAuctionActive.length > 0) {
         return next(new ErrorHandler("You already have one active auction.", 400));
-      }
-    
+    }
 
     try {
-        const avatar = await uploadOnCloudinary(image.tempFilePath)
-        if(!avatar){
-            return next(new ErrorHandler("Upload failed on cloudinary !!!",400))
+        const avatar = await uploadOnCloudinary(image.tempFilePath);
+        if (!avatar) {
+            return next(new ErrorHandler("Upload failed on Cloudinary !!!", 400));
         }
-    
+
         const auctionItem = await Auction.create({
             title,
             description,
@@ -63,21 +76,21 @@ export const addItem = AsyncHandler(async(req,res,next)=>{
             startingTime,
             endingTime,
             createdBy: req.user._id,
-            image:{
+            image: {
                 public_id: avatar.public_id,
-                url:avatar.secure_url
+                url: avatar.secure_url
             }
-        })
-    
+        });
+
         res.status(200).json({
-            success:true,
-            message:`Auction item created and will be listed on auction page at ${startingTime}`,
+            success: true,
+            message: `Auction item created and will be listed on auction page at ${startingTime}`,
             auctionItem
-        })
+        });
     } catch (error) {
-        return next(new ErrorHandler(error.message) || "Failed to create item")
+        return next(new ErrorHandler(error.message || "Failed to create item"));
     }
-}) 
+});
 
 export const getAllItems = AsyncHandler(async(req,res,next)=>{
     let items = await Auction.find()
