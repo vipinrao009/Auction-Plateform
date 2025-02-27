@@ -8,6 +8,7 @@ import { ErrorMiddleware } from "./middleware/error.js";
 import userRouter from "./router/userRouter.js"
 import auctionRouter from "./router/auctionRouter.js"
 import bidRouter from "./router/bidRouter.js"
+import commissionRouter from "./router/commissionRouter.js"
 const app = express()
 
 // cors is used for connecting fronted with backend
@@ -28,6 +29,7 @@ app.use(
 app.use("/api/v1/user/",userRouter)
 app.use("/api/v1/auction/",auctionRouter)
 app.use("/api/v1/bid/",bidRouter)
+app.use("/api/v1/commission/",commissionRouter)
 app.use(ErrorMiddleware)
 
 export default app
