@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { RiAuctionFill, RiInstagramFill } from "react-icons/ri";
 import { MdLeaderboard, MdDashboard } from "react-icons/md";
 import { SiGooglesearchconsole } from "react-icons/si";
@@ -6,7 +7,7 @@ import { BsFillInfoSquareFill } from "react-icons/bs";
 import { FaFacebook, FaUserCircle, FaFileInvoiceDollar, FaEye } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoMdCloseCircleOutline, IoIosCreate } from "react-icons/io";
-import { Link } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const SideDrawer = () => {
   const [show, setShow] = useState(false);
@@ -15,26 +16,29 @@ const SideDrawer = () => {
 
   return (
     <>
-      {/* Hamburger Icon (Mobile View) */}
-      <div
-        onClick={() => setShow(!show)}
-        className="position-fixed top-2 end-2 bg-danger text-white fs-3 p-2 rounded cursor-pointer d-lg-none"
-      >
-        <GiHamburgerMenu />
-      </div>
+      {/* Mobile Hamburger Button */}
+      <button
+  className="btn btn-danger d-lg-none position-fixed top-2 end-0 me-3 p-2 rounded-circle"
+  onClick={() => setShow(true)}
+>
+  <GiHamburgerMenu size={24} />
+</button>
 
-      {/* Side Drawer */}
-      <div
-        className={`position-fixed top-0 bg-light h-100 p-3 border-end transition ${show ? "start-0" : "start-100 d-none d-lg-block"}`}
-        style={{ width: "300px" }}
-      >
-        <div className="position-relative">
+
+
+
+      {/* Sidebar */}
+      <div className={`sidebar bg-light ${show ? "show" : ""} d-lg-block`}>
+        <div className="p-3 d-flex flex-column h-100">
+          {/* Logo */}
           <Link to="/" className="text-decoration-none">
             <h4 className="fw-bold">
               Prime<span className="text-danger">Bid</span>
             </h4>
           </Link>
-          <ul className="list-unstyled">
+
+          {/* Navigation Links */}
+          <ul className="list-unstyled mt-3">
             <li>
               <Link to="/auctions" className="d-flex align-items-center text-dark fw-semibold fs-5 mb-2 text-decoration-none">
                 <RiAuctionFill className="me-2" /> Auctions
@@ -95,8 +99,6 @@ const SideDrawer = () => {
             </div>
           )}
 
-          <hr className="mb-3" />
-
           {/* Additional Links */}
           <ul className="list-unstyled">
             {isAuthenticated && (
@@ -118,34 +120,34 @@ const SideDrawer = () => {
             </li>
           </ul>
 
-          {/* Close Button (Mobile View) */}
-          <IoMdCloseCircleOutline
-            onClick={() => setShow(!show)}
-            className="position-absolute top-0 end-0 fs-2 cursor-pointer d-lg-none"
-          />
+          {/* Footer */}
+          <div className="mt-auto p-3 text-center">
+            <div className="d-flex justify-content-center gap-2 mb-2">
+              <Link to="/" className="btn btn-light p-2 rounded-circle text-dark">
+                <FaFacebook />
+              </Link>
+              <Link to="/" className="btn btn-light p-2 rounded-circle text-dark">
+                <RiInstagramFill />
+              </Link>
+            </div>
+            <Link to="/contact" className="text-secondary fw-semibold text-decoration-none d-block mb-1">
+              Contact Us
+            </Link>
+            <p className="text-secondary mb-1">&copy; PrimeBid, LLC.</p>
+            <p className="text-secondary">
+              Designed by{" "}
+              <Link to="/" className="fw-semibold text-danger text-decoration-none">
+                Vipin Kumar
+              </Link>
+            </p>
+          </div>
         </div>
 
-        {/* Footer */}
-        <div className="mt-auto">
-          <div className="d-flex gap-2 mb-2">
-            <Link to="/" className="btn btn-light p-2 rounded-circle text-dark">
-              <FaFacebook />
-            </Link>
-            <Link to="/" className="btn btn-light p-2 rounded-circle text-dark">
-              <RiInstagramFill />
-            </Link>
-          </div>
-          <Link to="/contact" className="text-secondary fw-semibold text-decoration-none d-block mb-1">
-            Contact Us
-          </Link>
-          <p className="text-secondary mb-1">&copy; PrimeBid, LLC.</p>
-          <p className="text-secondary">
-            Designed by{" "}
-            <Link to="/" className="fw-semibold text-danger text-decoration-none">
-              CodeWithZeeshu
-            </Link>
-          </p>
-        </div>
+        {/* Close Button for Mobile */}
+        <IoMdCloseCircleOutline
+          onClick={() => setShow(false)}
+          className="position-fixed top-2 end-0 me-3 p-2 cursor-pointer text-danger d-lg-none"
+        />
       </div>
     </>
   );

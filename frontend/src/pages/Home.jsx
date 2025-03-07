@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
+import SideDrawer from '../Layout/SideDrawer';
 
 const Home = () => {
 
@@ -10,15 +11,12 @@ const Home = () => {
           title: "Win Notification",
           description: "Highest bidder receives a winning email.",
         },
-        {
-          title: "Payment & Fees",
-          description: "Bidder pays; auctioneer pays 5% fee.",
-        },
       ];
     
     const { isAuthenticated } = true
     return (
-        <>
+        <div className='d-flex'>
+        <SideDrawer/>
         <section className="container-fluid px-3 px-md-5 pt-5 pt-lg-20 min-vh-100 d-flex flex-column justify-content-center">
             <div>
             <p className="text-secondary fw-bold fs-5 mb-4">
@@ -68,7 +66,7 @@ const Home = () => {
             <UpcomingAuctions />
             <Leaderboard /> */}
         </section>
-        </>
+        </div>
     )
 }
 
