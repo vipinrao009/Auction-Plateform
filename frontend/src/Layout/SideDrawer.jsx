@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { RiAuctionFill, RiInstagramFill } from "react-icons/ri";
 import { MdLeaderboard, MdDashboard } from "react-icons/md";
@@ -7,28 +7,38 @@ import { BsFillInfoSquareFill } from "react-icons/bs";
 import { FaFacebook, FaUserCircle, FaFileInvoiceDollar, FaEye } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoMdCloseCircleOutline, IoIosCreate } from "react-icons/io";
+import { useDispatch, useSelector } from 'react-redux'
 import "bootstrap/dist/css/bootstrap.min.css";
+import { logout } from "../store/slice/userSlice";
 
 const SideDrawer = () => {
   const [show, setShow] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(true); // Mock authentication
-  const user = { role: "Auctioneer" }; // Mock user role
+  const { isAuthenticated, user} = useSelector((state)=>state.user)
+  console.log(user)
+  const dispatch = useDispatch();
+  const handleLogout = ()=>{
+    dispatch(logout())
+  }
+
+  useEffect(()=>{
+    user
+  })
 
   return (
     <>
       {/* Mobile Hamburger Button */}
       <button
-  className="btn btn-danger d-lg-none position-fixed top-2 end-0 me-3 p-2 rounded-circle"
-  onClick={() => setShow(true)}
->
-  <GiHamburgerMenu size={24} />
-</button>
+        className="btn btn-danger d-lg-none position-fixed top-2 end-0 me-3 p-2 rounded-circle"
+        onClick={() => setShow(true)}
+      >
+        <GiHamburgerMenu size={24} />
+      </button>
 
 
 
 
       {/* Sidebar */}
-      <div className={`sidebar bg-light ${show ? "show" : ""} d-lg-block`}>
+      <div onClick={()=> setShow(!show)} className={`sidebar  ${show ? "show" : ""} d-lg-block`}>
         <div className="p-3 d-flex flex-column h-100">
           {/* Logo */}
           <Link to="/" className="text-decoration-none">

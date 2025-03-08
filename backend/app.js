@@ -13,7 +13,7 @@ const app = express()
 
 // cors is used for connecting fronted with backend
 app.use(cors({
-    origin:[],
+    origin:[process.env.FRONTEND_URL],
     credentials:true
 }))
 
